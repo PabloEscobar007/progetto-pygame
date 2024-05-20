@@ -17,6 +17,10 @@ white = (255, 255, 255)
 
 # carico le immagini
 cannone_immagine = pygame.image.load('immagini/cannone.png')
+palla_blu = pygame.image.load('immagini/palla_blu.png')
+palla_verde = pygame.image.load('immagini/palla_verde.png')
+palla_rossa = pygame.image.load('immagini/palla_rossa.png')
+palla_gialla = pygame.image.load('immagini/palla_gialla.png')
 
 # proporziono il cannone in base allo schermo
 cannone_proporzionato = pygame.transform.scale_by(cannone_immagine, 0.5)
@@ -81,3 +85,4 @@ while True:
 
     pygame.display.update()
     clock.tick(fps)
+
