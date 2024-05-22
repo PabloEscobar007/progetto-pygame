@@ -1,6 +1,8 @@
 import pygame, sys
 from pygame.locals import *
 import math
+import random
+from classe_palline import *
 
 pygame.init()
 
@@ -26,9 +28,18 @@ palla_gialla = pygame.image.load('immagini/palla_gialla.png')
 cannone_proporzionato = pygame.transform.scale_by(cannone_immagine, 0.5)
 
 # informazioni su dove voglio posizionare il mio cannone
-x = lunghezza_schermo/2
-y = altezza_schermo - 50
+cannone_x = lunghezza_schermo/2
+cannone_y = altezza_schermo - 50
 
+# inserisco le misure nelle quali le palle comparirano e creo le liste che mi serviranno in seguito per stampare la tipoliga di palla e la pos
+x_blu_list = []
+y_blu_list = []
+palle_immagini = [palla_blu, palla_verde, palla_rossa, palla_gialla]
+raggio = 15
+x_min = raggio+5
+x_max = lunghezza_schermo - raggio - 5
+y_min = raggio + 5
+y_max = altezza_schermo // 2
 
 # carattere e grandezza delle varie cose che vogliamo scrivere
 font = pygame.font.SysFont('comicsans', 50)
@@ -72,13 +83,13 @@ while True:
     
     pos = pygame.mouse.get_pos()
     # calcolare l'angolo del cannone
-    x_distanza = pos[0] - x
-    y_distanza = -(pos[1] - y)
+    x_distanza = pos[0] - cannone_x
+    y_distanza = -(pos[1] - cannone_y)
     angle = math.degrees(math.atan2(y_distanza, x_distanza))
 
     # faccio ruotare il cannone
     cannone_finale = pygame.transform.rotate(cannone_proporzionato, angle - 90)
-    cannone_rect = cannone_finale.get_rect(center = (x, y))
+    cannone_rect = cannone_finale.get_rect(center = (cannone_x, cannone_y))
     
     # stampo il cannone
     screen.blit(cannone_finale, cannone_rect)
