@@ -3,6 +3,7 @@ from pygame.locals import *
 import math
 import random
 from classe_palline import *
+from classe_palla import Palla
 
 pygame.init()
 
@@ -57,6 +58,9 @@ for _ in range(30):
                 ok = False
     immagine = random.choice(palle_immagini)
     palline.append(Palline(screen, immagine, raggio, x, y))
+
+#creo la palla principale
+palla = Palla(screen, (cannone_x, cannone_y + 100), (10, 10), white)
 
 # carattere e grandezza delle varie cose che vogliamo scrivere
 font = pygame.font.SysFont('comicsans', 50)
