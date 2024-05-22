@@ -41,6 +41,23 @@ x_max = lunghezza_schermo - raggio - 5
 y_min = raggio + 5
 y_max = altezza_schermo // 2
 
+#creo palline dando la distanza tra loro e dallo schermo
+def distanza(p1, p2):
+    return ((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)**(0.5)
+
+palline = []
+for _ in range(30):
+    ok = False
+    while not ok:
+        x = randint(x_min, x_max)
+        y = randint(y_min, y_max)
+        ok = True
+        for pallina in palline:
+            if distanza(pallina.rect.center, (x,y)) < 2*raggio:
+                ok = False
+    immagine = random.choice(palle_immagini)
+    palline.append(Palline(screen, immagine, raggio, x, y))
+
 # carattere e grandezza delle varie cose che vogliamo scrivere
 font = pygame.font.SysFont('comicsans', 50)
 
@@ -93,6 +110,10 @@ while True:
     
     # stampo il cannone
     screen.blit(cannone_finale, cannone_rect)
+
+    # stampo le palline
+    for i in range(30):
+        palline[i].draw()
 
     pygame.display.update()
     clock.tick(fps)
