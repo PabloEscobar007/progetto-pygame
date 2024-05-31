@@ -3,12 +3,14 @@ from pygame.locals import *
 import math
 import random
 from classe_palline import *
-from classe_palla import Palla
+from classe_palla import *
+from classe_tavolo import *
+from classe_bottone import *
 
 pygame.init()
 
 # settaggi base finestra, clock e colori
-lunghezza_schermo = 700
+lunghezza_schermo =  700
 altezza_schermo = 750
 window_size = (lunghezza_schermo, altezza_schermo)
 screen = pygame.display.set_mode(window_size)
@@ -24,6 +26,7 @@ palla_blu = pygame.image.load('immagini/palla_blu.png')
 palla_verde = pygame.image.load('immagini/palla_verde.png')
 palla_rossa = pygame.image.load('immagini/palla_rossa.png')
 palla_gialla = pygame.image.load('immagini/palla_gialla.png')
+palla_principale = pygame.image.load('immagini/palla_princ.png')
 
 # proporziono il cannone in base allo schermo
 cannone_proporzionato = pygame.transform.scale_by(cannone_immagine, 0.5)
@@ -33,14 +36,26 @@ cannone_x = lunghezza_schermo/2
 cannone_y = altezza_schermo - 50
 
 # inserisco le misure nelle quali le palle comparirano e creo le liste che mi serviranno in seguito per stampare la tipoliga di palla e la pos
-x_blu_list = []
-y_blu_list = []
+tavolo_h = 75
+tavolo_altezza = altezza_schermo - tavolo_h
 palle_immagini = [palla_blu, palla_verde, palla_rossa, palla_gialla]
 raggio = 15
-x_min = raggio+5
+x_min = raggio + 5
 x_max = lunghezza_schermo - raggio - 5
-y_min = raggio + 5
+y_min = raggio + 90
 y_max = altezza_schermo // 2
+numero_palla = 5
+punti = 0
+
+# creo il tavolo di gioco
+tavolo = Tavolo(
+    screen,
+    [0, tavolo_h],
+    [lunghezza_schermo, tavolo_altezza],
+    5,
+    white
+)
+
 
 #creo palline dando la distanza tra loro e dallo schermo
 def distanza(p1, p2):
