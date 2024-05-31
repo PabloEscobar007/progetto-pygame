@@ -75,7 +75,7 @@ for _ in range(30):
     palline.append(Palline(screen, immagine, raggio, x, y))
 
 #creo la palla principale
-palla = Palla(screen, (cannone_x, cannone_y + 100), (10, 10), white)
+palla = Palla(screen, palla_principale, 10, cannone_x, cannone_y - 45)
 
 # carattere e grandezza delle varie cose che vogliamo scrivere
 font = pygame.font.SysFont('comicsans', 50)
@@ -106,6 +106,7 @@ def wait_for_input():
 draw_text("Premi invio per cominciare", "PEGGLE")
 wait_for_input()
 
+movimento_palla = False
 # ciclo fondamentale
 while True:
     
@@ -114,9 +115,15 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-    
+        if event.type == MOUSEBUTTONDOWN:
+            movimento_palla = True
+
     screen.fill(black)
     
+    # faccio muiovere la palla principale nello schermo
+    if movimento_palla == True:
+        palla.muovi()
+        
     pos = pygame.mouse.get_pos()
     # calcolare l'angolo del cannone
     x_distanza = pos[0] - cannone_x
@@ -128,6 +135,8 @@ while True:
     cannone_rect = cannone_finale.get_rect(center = (cannone_x, cannone_y))
     
     # stampo il cannone
+    tavolo.draw()
+    palla.draw()
     screen.blit(cannone_finale, cannone_rect)
 
     # stampo le palline
