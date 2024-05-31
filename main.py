@@ -106,6 +106,9 @@ def wait_for_input():
 draw_text("Premi invio per cominciare", "PEGGLE")
 wait_for_input()
 
+minuti = 0
+secondi = 0
+tick = 0
 movimento_palla = False
 # ciclo fondamentale
 while True:
@@ -129,6 +132,31 @@ while True:
     x_distanza = pos[0] - cannone_x
     y_distanza = -(pos[1] - cannone_y)
     angle = math.degrees(math.atan2(y_distanza, x_distanza))
+
+    # cronometro
+    tick += 1
+
+    if tick == 60:
+        secondi += 1
+        tick = 0
+        font = pygame.font.SysFont(None, 50)
+        if secondi < 10:
+            tempo = font.render(f"0{minuti}:0{secondi}", True, (255, 255, 255))
+            screen.blit(tempo, (50, 35))
+        elif secondi >= 10:
+            tempo = font.render(f"0{minuti}:{secondi}", True, (255, 255, 255))
+            screen.blit(tempo, (50, 35))
+        if secondi == 60:
+            minuti += 1
+            secondi = 0
+    else:
+        font = pygame.font.SysFont(None, 50)
+        if secondi < 10:
+            tempo = font.render(f"0{minuti}:0{secondi}", True, (255, 255, 255))
+            screen.blit(tempo, (50, 35))
+        elif secondi >= 10:
+            tempo = font.render(f"0{minuti}:{secondi}", True, (255, 255, 255))
+            screen.blit(tempo, (50, 35))
 
     # faccio ruotare il cannone
     cannone_finale = pygame.transform.rotate(cannone_proporzionato, angle - 90)
