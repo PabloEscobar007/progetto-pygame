@@ -75,7 +75,7 @@ for _ in range(30):
     palline.append(Palline(screen, immagine, raggio, x, y))
 
 #creo la palla principale
-palla = Palla(screen, palla_principale, 10, cannone_x, cannone_y - 45)
+palla = Palla(screen, palla_principale, 10, cannone_x, cannone_y)
 
 # carattere e grandezza delle varie cose che vogliamo scrivere
 font = pygame.font.SysFont('comicsans', 50)
@@ -110,6 +110,7 @@ minuti = 0
 secondi = 0
 tick = 0
 movimento_palla = False
+cannone_giu = False
 # ciclo fondamentale
 while True:
     
@@ -118,20 +119,38 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == MOUSEBUTTONDOWN:
+        if event.type == MOUSEBUTTONDOWN and numero_palla > 0 and cannone_giu == False:
+            if movimento_palla == False:
+                numero_palla -= 1
             movimento_palla = True
+        
 
     screen.fill(black)
-    
-    # faccio muiovere la palla principale nello schermo
-    if movimento_palla == True:
-        palla.muovi()
         
     pos = pygame.mouse.get_pos()
     # calcolare l'angolo del cannone
     x_distanza = pos[0] - cannone_x
     y_distanza = -(pos[1] - cannone_y)
     angle = math.degrees(math.atan2(y_distanza, x_distanza))
+    
+    # calcolare le distanze di dove parte la pallina 
+    if x_distanza == 0 and y_distanza > 0: 
+        palla.velocity[0] = 0
+        palla.velocity[1] = -2
+        cannone_giu = False
+    elif y_distanza > 0:
+        m = y_distanza / x_distanza
+        if movimento_palla == False:
+            palla.velocity[0] = 2 / m
+            palla.velocity[1] = -2
+            cannone_giu = False
+    elif y_distanza <= 0:
+        movimento_palla = False
+        cannone_giu = True
+
+    # faccio muiovere la palla principale nello schermo
+    if movimento_palla == True:
+        palla.muovi(palline)
 
     # cronometro
     tick += 1
@@ -161,6 +180,11 @@ while True:
     # faccio ruotare il cannone
     cannone_finale = pygame.transform.rotate(cannone_proporzionato, angle - 90)
     cannone_rect = cannone_finale.get_rect(center = (cannone_x, cannone_y))
+
+    # collisione con le palline
+    for i in range(len(palline) - 1):
+        if palla.rect.colliderect(palline[i].rect):
+            palline.pop(i)
     
     # stampo il cannone
     tavolo.draw()
@@ -168,8 +192,28 @@ while True:
     screen.blit(cannone_finale, cannone_rect)
 
     # stampo le palline
-    for i in range(30):
+    for i in range(len(palline) - 1):
         palline[i].draw()
+
+
+    # scrivere vittoria nel caso finisci le palline
+    if len(palline) == 0:
+        win = font.render("You win!", True, (0, 255, 0))
+        screen.blit(win, (lunghezza_schermo / 2 - 100, altezza_schermo / 2))
+
+    # scrivere game over nel caso perdi e stampare di nuovo la palla quando cade giù
+    if palla.rect.y > altezza_schermo:
+        if numero_palla > 0:
+            palla = Palla(screen, palla_principale, 10, cannone_x, cannone_y)
+        elif len(palline) > 0:
+            game_over = font.render("Game over!", True, (255, 0, 0))
+            screen.blit(game_over, (lunghezza_schermo / 2 - 100, altezza_schermo / 2))
+        movimento_palla = False
+    
+    # stampare il numero di palle rimanenti 
+    font2 = pygame.font.SysFont(None, 35)
+    palle_rimaste = font2.render(f"palle rimaste: {numero_palla}", True, (255, 255, 255))
+    screen.blit(palle_rimaste, (250, 40))
 
     pygame.display.update()
     clock.tick(fps)

@@ -18,6 +18,6 @@ class Palline:
         self.y = y
         self.rect = self.image.get_rect(center = (x,y))
         
-            
+        
     def draw(self): 
         self.screen.blit(self.image, self.rect)
