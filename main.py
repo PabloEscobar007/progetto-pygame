@@ -56,6 +56,13 @@ tavolo = Tavolo(
     white
 )
 
+# creazione bottone restart
+bottone_restart_width = 200
+bottone_restart = Bottone(screen,
+                        [500, 30], # pos
+                        [bottone_restart_width , 40], # size
+                        "Reset"
+)
 
 #creo palline dando la distanza tra loro e dallo schermo
 def distanza(p1, p2):
@@ -119,11 +126,47 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+
         if event.type == MOUSEBUTTONDOWN and numero_palla > 0 and cannone_giu == False:
             if movimento_palla == False:
                 numero_palla -= 1
             movimento_palla = True
         
+        if event.type == MOUSEBUTTONUP and event.button == 1:
+            pos = pygame.mouse.get_pos()    
+
+            if bottone_restart.rect.collidepoint(pos):
+                tavolo = Tavolo(
+                    screen,
+                    [0, tavolo_h],
+                    [lunghezza_schermo, tavolo_altezza],
+                    5,
+                    white
+                )
+                palline = []
+                for _ in range(30):
+                    ok = False
+                    while not ok:
+                        x = randint(x_min, x_max)
+                        y = randint(y_min, y_max)
+                        ok = True
+                        for pallina in palline:
+                            if distanza(pallina.rect.center, (x,y)) < 2*raggio:
+                                ok = False
+                    immagine = random.choice(palle_immagini)
+                    palline.append(Palline(screen, immagine, raggio, x, y))
+                palla = Palla(screen, palla_principale, 10, cannone_x, cannone_y)
+                
+    
+    keys = pygame.mouse.get_pressed()
+    pos = pygame.mouse.get_pos()
+    if keys[0] and bottone_restart.rect.collidepoint(pos): # 0: tasto sinistro, 1: rotella, 2: tasto destro
+        bottone_restart.chiaro()
+        secondi = 0
+        minuti = 0
+        tick = 0
+    else:
+        bottone_restart.base()
 
     screen.fill(black)
         
@@ -186,10 +229,11 @@ while True:
         if palla.rect.colliderect(palline[i].rect):
             palline.pop(i)
     
-    # stampo il cannone
+    # stampo cannone, tavolo, palla e bottone restart
     tavolo.draw()
     palla.draw()
     screen.blit(cannone_finale, cannone_rect)
+    bottone_restart.draw()
 
     # stampo le palline
     for i in range(len(palline) - 1):
