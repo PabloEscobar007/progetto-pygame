@@ -27,6 +27,7 @@ palla_verde = pygame.image.load('immagini/palla_verde.png')
 palla_rossa = pygame.image.load('immagini/palla_rossa.png')
 palla_gialla = pygame.image.load('immagini/palla_gialla.png')
 palla_principale = pygame.image.load('immagini/palla_princ.png')
+sfondo = pygame.transform.scale((pygame.image.load("immagini/sfondo.jpg")), (lunghezza_schermo, altezza_schermo))
 
 # proporziono il cannone in base allo schermo
 cannone_proporzionato = pygame.transform.scale_by(cannone_immagine, 0.5)
@@ -93,7 +94,7 @@ def draw_text(text, title):
     text_rect = text_surface.get_rect(center = (lunghezza_schermo/2, altezza_schermo/2))
     title_surface = font.render(title, True, (255, 255, 255))
     title_rect = title_surface.get_rect(center = (lunghezza_schermo/2, altezza_schermo/4))
-    screen.fill((0, 0, 0))
+    screen.blit(sfondo, (0,0))
     screen.blit(text_surface, text_rect)
     screen.blit(title_surface, title_rect)
     pygame.display.flip()
@@ -110,8 +111,16 @@ def wait_for_input():
                 if event.key == pygame.K_RETURN:
                     waiting = False
 
+# carico audio 
+intro = pygame.mixer.Sound("musiche e effetti sonori/canzone_intro.mp3")
+gioco = pygame.mixer.Sound("musiche e effetti sonori/canzone_gioco.mp3")
+
+# faccio partire l'audio intro finchè non starto e ne faccio partire un'altro
+pygame.mixer.Sound.play(intro, -1)
 draw_text("Premi invio per cominciare", "PEGGLE")
 wait_for_input()
+pygame.mixer.Sound.stop(intro)
+pygame.mixer.Sound.play(gioco, -1)
 
 minuti = 0
 secondi = 0
@@ -157,7 +166,7 @@ while True:
                     palline.append(Palline(screen, immagine, raggio, x, y))
                 palla = Palla(screen, palla_principale, 10, cannone_x, cannone_y)
                 
-    
+
     keys = pygame.mouse.get_pressed()
     pos = pygame.mouse.get_pos()
     if keys[0] and bottone_restart.rect.collidepoint(pos): # 0: tasto sinistro, 1: rotella, 2: tasto destro
@@ -165,11 +174,13 @@ while True:
         secondi = 0
         minuti = 0
         tick = 0
+        pygame.mixer.Sound.stop(gioco)
+        pygame.mixer.Sound.play(gioco, -1)
     else:
         bottone_restart.base()
 
     screen.fill(black)
-        
+
     pos = pygame.mouse.get_pos()
     # calcolare l'angolo del cannone
     x_distanza = pos[0] - cannone_x
@@ -242,7 +253,7 @@ while True:
 
     # scrivere vittoria nel caso finisci le palline
     if len(palline) == 0:
-        win = font.render("You win!", True, (0, 255, 0))
+        win = font.render("You won!", True, (0, 255, 0))
         screen.blit(win, (lunghezza_schermo / 2 - 100, altezza_schermo / 2))
 
     # scrivere game over nel caso perdi e stampare di nuovo la palla quando cade giù
