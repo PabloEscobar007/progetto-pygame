@@ -15,8 +15,8 @@ lunghezza_schermo =  700
 altezza_schermo = 750
 window_size = (lunghezza_schermo, altezza_schermo)
 screen = pygame.display.set_mode(window_size)
-pygame.display.set_caption('peggle')
-clock = pygame.time.Clock()  
+pygame.display.set_caption('peggle 2.0')
+clock = pygame.time.Clock()   
 fps = 60
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -88,16 +88,26 @@ palla = Palla(screen, palla_principale, 10, cannone_x, cannone_y)
 
 # carattere e grandezza delle varie cose che vogliamo scrivere
 font = pygame.font.SysFont('comicsans', 50)
+font_2 = pygame.font.SysFont('comicsans', 20)
 
 # schermata iniziale (titolo)
-def draw_text(text, title):
+def draw_text(text, title, consiglio, consiglio2):
     text_surface = font.render(text, True, (255, 255, 255))
     text_rect = text_surface.get_rect(center = (lunghezza_schermo/2, altezza_schermo/2))
+
+    consiglio_surface = font_2.render(consiglio, True, (255, 255, 255))
+    consiglio_rect = consiglio_surface.get_rect(center = (lunghezza_schermo/2, altezza_schermo/2 + 50))
+
+    consiglio2_surface = font_2.render(consiglio2, True, (255, 255, 255))
+    consiglio2_rect = consiglio2_surface.get_rect(center = (lunghezza_schermo/2, altezza_schermo/2 + 70))
+
     title_surface = font.render(title, True, (255, 255, 255))
     title_rect = title_surface.get_rect(center = (lunghezza_schermo/2, altezza_schermo/4))
     screen.blit(sfondo, (0,0))
     screen.blit(text_surface, text_rect)
     screen.blit(title_surface, title_rect)
+    screen.blit(consiglio_surface, consiglio_rect)
+    screen.blit(consiglio2_surface, consiglio2_rect)
     pygame.display.flip()
 
 # funzione per far partire il gioco 
@@ -118,7 +128,7 @@ gioco = pygame.mixer.Sound("musiche e effetti sonori/canzone_gioco.mp3")
 
 # faccio partire l'audio intro finchè non starto e ne faccio partire un'altro
 pygame.mixer.Sound.play(intro, -1)
-draw_text("Premi invio per cominciare", "PEGGLE")
+draw_text("Premere INVIO per iniziare", "PEGGLE 2.0", "CONSIGLIO: posizionare il cursore per mirare più vicino", "al cannone possibile per una precisione migliore")
 wait_for_input()
 pygame.mixer.Sound.stop(intro)
 pygame.mixer.Sound.play(gioco, -1)

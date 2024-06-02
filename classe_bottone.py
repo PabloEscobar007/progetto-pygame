@@ -24,7 +24,7 @@ class Bottone:
         self.text = self.font.render(self.testo, 1, WHITE)
 
        
-        pygame.draw.rect(self.image, (BLACK), (0, 0, self.rect.width, self.rect.height), 5)
+        pygame.draw.rect(self.image, (WHITE), (0, 0, self.rect.width, self.rect.height), 5)
         x = self.rect.width / 2 - self.text.get_width() / 2
         y = self.rect.height / 2 - self.text.get_height() / 2
         self.image.blit(self.text, (x, y))
