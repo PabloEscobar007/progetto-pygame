@@ -46,7 +46,7 @@ x_min = raggio + 5
 x_max = lunghezza_schermo - raggio - 5
 y_min = raggio + 90
 y_max = altezza_schermo // 2
-numero_palla = 5
+numero_palla = 6
 punti = 0
 
 # creo il tavolo di gioco
@@ -168,6 +168,7 @@ while True:
                     immagine = random.choice(palle_immagini)
                     palline.append(Palline(screen, immagine, raggio, x, y))
                 palla = Palla(screen, palla_principale, 10, cannone_x, cannone_y)
+                numero_palla = 6
                 
 
     keys = pygame.mouse.get_pressed()
