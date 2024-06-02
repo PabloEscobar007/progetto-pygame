@@ -13,7 +13,11 @@ class Palla():
         # disegno un cerchio nella superficie
         self.rect = self.image.get_rect(center = (x,y))
         
-        self.velocity = [randint(-4, 4),randint(-4, -2)]
+        self.velocity = [randint(2, 5),randint(2, 5)]
+        if randint(0, 1) == 0:
+            self.velocity[0] *= -1
+        if randint(0, 1) == 0:
+            self.velocity[1] *= -1
 
         
     def muovi(self, palline):

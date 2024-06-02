@@ -6,6 +6,7 @@ from classe_palline import *
 from classe_palla import *
 from classe_tavolo import *
 from classe_bottone import *
+from classe_esplosione import *
 
 pygame.init()
 
@@ -121,12 +122,14 @@ draw_text("Premi invio per cominciare", "PEGGLE")
 wait_for_input()
 pygame.mixer.Sound.stop(intro)
 pygame.mixer.Sound.play(gioco, -1)
+sfondo = pygame.transform.scale(sfondo, (lunghezza_schermo-10, altezza_schermo))
 
 minuti = 0
 secondi = 0
 tick = 0
 movimento_palla = False
 cannone_giu = False
+esplosioni = []
 # ciclo fondamentale
 while True:
     
@@ -136,13 +139,13 @@ while True:
             pygame.quit()
             sys.exit()
 
-        if event.type == MOUSEBUTTONDOWN and numero_palla > 0 and cannone_giu == False:
+        if event.type == MOUSEBUTTONDOWN and numero_palla > 0 and cannone_giu == False and not bottone_restart.rect.collidepoint(pos):
             if movimento_palla == False:
                 numero_palla -= 1
             movimento_palla = True
         
         if event.type == MOUSEBUTTONUP and event.button == 1:
-            pos = pygame.mouse.get_pos()    
+            pos = pygame.mouse.get_pos()
 
             if bottone_restart.rect.collidepoint(pos):
                 tavolo = Tavolo(
@@ -235,23 +238,29 @@ while True:
     cannone_finale = pygame.transform.rotate(cannone_proporzionato, angle - 90)
     cannone_rect = cannone_finale.get_rect(center = (cannone_x, cannone_y))
 
-    # collisione con le palline
+    # collisione con le palline + animazione esplosioni
     for i in range(len(palline) - 1):
         if palla.rect.colliderect(palline[i].rect):
+            esplosione = Esplosione(palline[i].x, palline[i].y)
+            esplosioni.append(esplosione)
             palline.pop(i)
+
     
-    # stampo cannone, tavolo, palla e bottone restart
+    # stampo cannone, tavolo, palla e bottone restart, animazione, sfondo
     tavolo.draw()
+    screen.blit(sfondo, (5, tavolo_h+5))
     palla.draw()
     screen.blit(cannone_finale, cannone_rect)
     bottone_restart.draw()
+    for esp in esplosioni:
+        esp.draw(screen)
 
     # stampo le palline
     for i in range(len(palline) - 1):
         palline[i].draw()
 
 
-    # scrivere vittoria nel caso finisci le palline
+    # scrivere vittoria nel caso rompi tutte le palline
     if len(palline) == 0:
         win = font.render("You won!", True, (0, 255, 0))
         screen.blit(win, (lunghezza_schermo / 2 - 100, altezza_schermo / 2))
